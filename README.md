@@ -4,6 +4,7 @@ Esta API consome o relatório de balneabilidade das praias da cidade do Rio de J
 
 É necessário executar o comando de gerenciamento runcrons pelo menos 1 vez ao dia para que os relatórios se mantenham atualizados.
 - manage.py runcrons
+
 Você pode agendar no seu sistema operacional a execução deste comando para ser executado 1 vez ao dia.
 
 Faça uma requisição GET para '*seu-dominio*/lista/' para retornar o referido JSON com as informações. 
