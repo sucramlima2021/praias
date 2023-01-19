@@ -10,5 +10,5 @@ Você pode agendar no seu sistema operacional a execução deste comando para se
 Faça uma requisição GET para '*seu-dominio*/lista/' para retornar o referido JSON com as informações. 
 
 já tem um administrador no Banco de dados: 
- - Username: *marcus 
- - senha: *123. 
+ - Username: marcus 
+ - senha: 123. 
