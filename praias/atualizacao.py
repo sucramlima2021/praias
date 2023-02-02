@@ -41,7 +41,7 @@ def atualiza():
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i)
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
@@ -70,6 +70,7 @@ def atualiza():
             for i in relatorios:
                 if i != link[cont]:
                     i.url = link[cont]
+                    i.verifica = timezone.now()
                     i.save()
                     #grava o pdf com o boletim na pasta media
                     r = requests.get(i, stream = True)
@@ -94,7 +95,7 @@ def atualiza():
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i)
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
@@ -161,3 +162,4 @@ def atualiza3():
         traceback.print_exc()
             
         return False
+

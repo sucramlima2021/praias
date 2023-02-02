@@ -4,6 +4,7 @@ from django.db import models
 class Relatorios(models.Model):
     nome = models.CharField(max_length=150, null=False, blank=False, unique=True)
     url = models.CharField(max_length=250, null=False, blank=False)
+    verifica = models.DateField()
 
     def __str__(self):
         return self.url
