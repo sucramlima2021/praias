@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from praias.pt_praias import PRAIAS
 from PyPDF2 import PdfReader
 from django.utils import timezone
+import unidecode
+
 
 
 
@@ -153,17 +155,16 @@ def atualiza3():
 
             texto = pag.extract_text()
             tt = texto.splitlines()
+            
             for i in tt:
-                
+                i = unidecode.unidecode(i).lower()
                 for j in pr:
-                    if j.ref in i:
-                        if "Imprópria" in i:
-                            j.propria = False
-                            
-                        elif "Amostragem não realizada" in i:
-                            j.propria = False
-                        else:
+                    if j.ref.lower() in i:
+                        if "propria" in i and "impropria"  not in i:
                             j.propria = True
+                            
+                        else:
+                            j.propria = False
 
                         j.atualizado_em = timezone.now()
                         j.save()

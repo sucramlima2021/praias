@@ -29,3 +29,17 @@ def ini(request):
     
     return HttpResponse('<h1>Balneabilidade das praias do Rio de Janeiro.</h1>')
 
+
+#view para rodar as rotinas de atualização manualmente.
+#def at(request):
+#    ok = False
+#    if atualiza():
+#            if atualiza2():
+#                if atualiza3():
+#                    ok = True
+#                    print('atualização concluida')
+#    if ok:
+#        msg = '<h1>atualização concluida.</h1>'
+#    else: 
+#        msg = '<h1>atualização Não concluida.</h1>'
+#    return HttpResponse(msg)
