@@ -119,7 +119,8 @@ def atualiza2():
     try:
         #Se for a primeira vez que o sistema é iniciado ou se a tabela de praias não tiver nenhum registro, cadastra as praias que estão no arquivo pt-praias.py
         praias = Praias.objects.all()
-
+        if len(praias) != len(PRAIAS):
+            praias.delete()
         if len(praias) == 0:
             for br, pr in PRAIAS.items():
                 for i in pr:
@@ -138,24 +139,35 @@ def atualiza2():
 def atualiza3():
     try:
         #atualiza as informações sobre a balneabilidade das praias de acordo com ultimo relatório emitido.
-        conteudo = PdfReader(settings.MEDIA_ROOT + '\zona_oeste_sul.pdf')
-        pr = Praias.objects.all()
-        pag = conteudo.pages[0]
+        for i in range(4):
+            if i == 0:
+                conteudo = PdfReader(settings.MEDIA_ROOT + '\zona_oeste_sul.pdf')
+            if i == 1:
+                conteudo = PdfReader(settings.MEDIA_ROOT + '\sepetiba.pdf')
+            if i == 2:
+                conteudo = PdfReader(settings.MEDIA_ROOT + '\paqueta.pdf')
+            if i == 3:
+                conteudo = PdfReader(settings.MEDIA_ROOT + '\ilha.pdf')
+            pr = Praias.objects.all()
+            pag = conteudo.pages[0]
 
-        texto = pag.extract_text()
-        tt = texto.splitlines()
-        for i in tt:
-            for j in pr:
-                if j.ref in i:
-                    if "Imprópria" in i:
-                        j.propria = False
-                        
-                    else:
-                        j.propria = True
+            texto = pag.extract_text()
+            tt = texto.splitlines()
+            for i in tt:
+                
+                for j in pr:
+                    if j.ref in i:
+                        if "Imprópria" in i:
+                            j.propria = False
+                            
+                        elif "Amostragem não realizada" in i:
+                            j.propria = False
+                        else:
+                            j.propria = True
 
-                    j.atualizado_em = timezone.now()
-                    j.save()
-        
+                        j.atualizado_em = timezone.now()
+                        j.save()
+            
         return True
     except Exception:
             
