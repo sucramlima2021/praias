@@ -7,6 +7,7 @@ from praias.pt_praias import PRAIAS
 from PyPDF2 import PdfReader
 from django.utils import timezone
 import unidecode
+import datetime
 
 
 
@@ -43,7 +44,7 @@ def atualiza():
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = datetime.date.today())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
@@ -72,7 +73,7 @@ def atualiza():
             for i in relatorios:
                 if i != link[cont]:
                     i.url = link[cont]
-                    i.verifica = timezone.now()
+                    i.verifica = datetime.date.today()
                     i.save()
                     #grava o pdf com o boletim na pasta media
                     r = requests.get(i, stream = True)
@@ -97,7 +98,7 @@ def atualiza():
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = datetime.date.today())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
@@ -126,7 +127,7 @@ def atualiza2():
         if len(praias) == 0:
             for br, pr in PRAIAS.items():
                 for i in pr:
-                    pra = Praias(nome = br+i[0], descr = "não tem", ref = i[0], bairro = br, coord = i[1], mapa = i[2], atualizado_em = timezone.now())
+                    pra = Praias(nome = br+i[0], descr = "não tem", ref = i[0], bairro = br, coord = i[1], mapa = i[2], atualizado_em = datetime.date.today())
                     pra.save()
         
         return True
@@ -166,7 +167,7 @@ def atualiza3():
                         else:
                             j.propria = False
 
-                        j.atualizado_em = timezone.now()
+                        j.atualizado_em = datetime.date.today()
                         j.save()
             
         return True
