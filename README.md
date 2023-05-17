@@ -4,7 +4,7 @@ Esta API consome o relatório de balneabilidade das praias da cidade do Rio de J
 
 O sistema verifica 1x ao dia se o INEA lançou novos relatórios e faz a atualização das informações
 
-Faça uma requisição GET para '*seu-dominio*/lista/' para retornar o referido JSON com as informações. 
+Faça uma requisição GET para a api para retornar o referido JSON com as informações. 
 
 já tem um administrador no Banco de dados: 
  - Username: marcus 
