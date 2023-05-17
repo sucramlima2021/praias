@@ -8,6 +8,9 @@ from PyPDF2 import PdfReader
 from django.utils import timezone
 import unidecode
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -24,7 +27,7 @@ def atualiza():
     link = []
     
     #lista com os nomes dos arquivos dos boletins
-    arquivos=['\zona_oeste_sul.pdf', '\sepetiba.pdf', '\ilha.pdf', '\paqueta.pdf']
+    arquivos=['/zona_oeste_sul.pdf', '/sepetiba.pdf', '/ilha.pdf', '/paqueta.pdf']
 
     #adiciona os links dos boletins a lista
     for l in links:
@@ -39,18 +42,18 @@ def atualiza():
     inicio = len(relatorios)
     
     if inicio == 0:
-        print(inicio)
+        
         try:
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = datetime.date.today())
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
                 r = requests.get(i, stream = True)
                 arq = settings.MEDIA_ROOT + arquivos[cont]
-                print(arq)
+                
                 with open(arq,"wb") as pdf: 
                     for chunk in r.iter_content(chunk_size=1024): 
                         if chunk: 
@@ -62,7 +65,7 @@ def atualiza():
             return True
         except Exception:
             
-            traceback.print_exc()
+            logger.warning(traceback.print_exc())
         
             return False
 
@@ -73,7 +76,7 @@ def atualiza():
             for i in relatorios:
                 if i != link[cont]:
                     i.url = link[cont]
-                    i.verifica = datetime.date.today()
+                    i.verifica = timezone.now()
                     i.save()
                     #grava o pdf com o boletim na pasta media
                     r = requests.get(i, stream = True)
@@ -89,7 +92,7 @@ def atualiza():
             return True
         except Exception:
             
-            traceback.print_exc()
+            logger.warning(traceback.print_exc())
         
             return False
     else:
@@ -98,7 +101,7 @@ def atualiza():
             cont = 0
             for i in link:
                 #grava o registro no banco
-                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = datetime.date.today())
+                relatorio = Relatorios(nome = arquivos[cont], url = i, verifica = timezone.now())
                 relatorio.save()
 
                 #grava o pdf com o boletim na pasta media
@@ -115,7 +118,7 @@ def atualiza():
             return True
         except Exception:
             
-            traceback.print_exc()
+            logger.warning(traceback.print_exc())
         
             return False
 def atualiza2():
@@ -127,13 +130,13 @@ def atualiza2():
         if len(praias) == 0:
             for br, pr in PRAIAS.items():
                 for i in pr:
-                    pra = Praias(nome = br+i[0], descr = "não tem", ref = i[0], bairro = br, coord = i[1], mapa = i[2], atualizado_em = datetime.date.today())
+                    pra = Praias(nome = br+i[0], descr = "não tem", ref = i[0], bairro = br, coord = i[1], mapa = i[2], atualizado_em = timezone.now())
                     pra.save()
         
         return True
     except Exception:
             
-        traceback.print_exc()
+        logger.warning(traceback.print_exc())
         
         return False
 
@@ -144,13 +147,13 @@ def atualiza3():
         #atualiza as informações sobre a balneabilidade das praias de acordo com ultimo relatório emitido.
         for i in range(4):
             if i == 0:
-                conteudo = PdfReader(settings.MEDIA_ROOT + '\zona_oeste_sul.pdf')
+                conteudo = PdfReader(settings.MEDIA_ROOT + '/zona_oeste_sul.pdf')
             if i == 1:
-                conteudo = PdfReader(settings.MEDIA_ROOT + '\sepetiba.pdf')
+                conteudo = PdfReader(settings.MEDIA_ROOT + '/sepetiba.pdf')
             if i == 2:
-                conteudo = PdfReader(settings.MEDIA_ROOT + '\paqueta.pdf')
+                conteudo = PdfReader(settings.MEDIA_ROOT + '/paqueta.pdf')
             if i == 3:
-                conteudo = PdfReader(settings.MEDIA_ROOT + '\ilha.pdf')
+                conteudo = PdfReader(settings.MEDIA_ROOT + '/ilha.pdf')
             pr = Praias.objects.all()
             pag = conteudo.pages[0]
 
@@ -167,13 +170,13 @@ def atualiza3():
                         else:
                             j.propria = False
 
-                        j.atualizado_em = datetime.date.today()
+                        j.atualizado_em = timezone.now()
                         j.save()
             
         return True
     except Exception:
             
-        traceback.print_exc()
+        logger.warning(traceback.print_exc())
             
         return False
 
